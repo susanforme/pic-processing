@@ -1,0 +1,31 @@
+{
+  "name": "pic-processing",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/pic-processing.umd.cjs",
+  "module": "./dist/pic-processing.js",
+  "types": "./dist/pic-processing.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/pic-processing.js",
+      "require": "./dist/pic-processing.umd.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.34.0",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.4",
+    "vite": "^4.0.4",
+    "vite-plugin-dts": "2.0.0-beta.3"
+  }
+}

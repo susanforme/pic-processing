@@ -65,6 +65,8 @@ export class PicProcessor {
       img.onload = () => {
         this.width = img.width
         this.height = img.height
+        // revoke the object URL
+        window.URL.revokeObjectURL(img.src!)
         document.body.removeChild(img)
         resolve(true)
       }

@@ -5,12 +5,12 @@ export class PicProcessor {
    * @description Configuration for the PicProcessor class
    */
   #config: Required<PicProcessorConfig>
-  /**
-   * @param  config for the PicProcessor class
-   */
   #width = 0
   #height = 0
   #imgBlob = new Blob()
+  /**
+   * @param  config for the PicProcessor class
+   */
   constructor(config: PicProcessorConfig) {
     this.#config = this.#addDefaultConfig(config)
   }

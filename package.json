@@ -1,14 +1,14 @@
 {
-  "name": "pic-processing",
+  "name": "pic-processor",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/pic-processing.umd.cjs",
-  "module": "./dist/pic-processing.js",
-  "types": "./dist/pic-processing.d.ts",
+  "main": "./dist/pic-processor.umd.cjs",
+  "module": "./dist/pic-processor.js",
+  "types": "./dist/pic-processor.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/pic-processing.js",
-      "require": "./dist/pic-processing.umd.cjs"
+      "import": "./dist/pic-processor.js",
+      "require": "./dist/pic-processor.umd.cjs"
     },
     "./package.json": "./package.json"
   },
@@ -22,6 +22,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^18.14.0",
     "eslint": "^8.34.0",
     "prettier": "^2.8.4",
     "typescript": "^4.9.4",

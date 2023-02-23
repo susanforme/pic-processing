@@ -27,17 +27,61 @@ export class PicProcessor {
     const ctx = canvas.getContext('2d')!
     canvas.width = this.#width
     canvas.height = this.#height
-    const img = new Image()
-    img.src = URL.createObjectURL(this.#imgBlob)
-    ctx.drawImage(
-      img,
-      0,
-      0,
-      this.#width * this.#config.scale,
-      this.#height * this.#config.scale
+    const bitmap = await window.createImageBitmap(
+      this.#imgBlob
     )
+    ctx.drawImage(bitmap, 0, 0)
     const base64 = canvas.toDataURL()
-    return base64
+    return {
+      base64,
+      // blob: await this.#canvasToBlob(canvas),
+    }
+  }
+  /**
+   *
+   */
+  #canvasToBlob(canvas: HTMLCanvasElement) {
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        blob => {
+          resolve(blob!)
+        },
+        // only support png because of canvas not support gif
+        'image/png',
+        1
+      )
+    })
+  }
+  /**
+   * @description Returns the loaded image
+   */
+  #getImg() {
+    return new Promise(
+      (
+        resolve: (
+          value: [HTMLImageElement, () => void]
+        ) => void,
+        reject
+      ) => {
+        const img = new Image()
+        img.src = URL.createObjectURL(this.#imgBlob)
+        img.style.visibility = 'hidden'
+        img.style.position = 'absolute'
+        document.body.appendChild(img)
+        img.onload = () => {
+          resolve([
+            img,
+            () => {
+              document.body.removeChild(img)
+              URL.revokeObjectURL(img.src!)
+            },
+          ])
+        }
+        img.onerror = error => {
+          reject(error)
+        }
+      }
+    )
   }
   /**
    * @description Initializes the PicProcessor class
@@ -46,7 +90,6 @@ export class PicProcessor {
     return new Promise((resolve, reject) => {
       const config = this.#config
       const { content } = config
-      const img = new Image()
       if (content instanceof File) {
         this.#imgBlob = Utils.fileToBlob(content)
       } else if (content instanceof Blob) {
@@ -60,16 +103,16 @@ export class PicProcessor {
       } else {
         throw new Error('Invalid content')
       }
-      img.src = URL.createObjectURL(this.#imgBlob)
-      document.body.appendChild(img)
-      img.onload = () => {
-        this.#width = img.width
-        this.#height = img.height
-        // revoke the object URL
-        window.URL.revokeObjectURL(img.src!)
-        document.body.removeChild(img)
-        resolve(true)
-      }
+      this.#getImg()
+        .then(([img, uninstall]) => {
+          this.#width = img.width
+          this.#height = img.height
+          uninstall()
+          resolve(true)
+        })
+        .catch(error => {
+          reject(error)
+        })
     })
   }
   #addDefaultConfig(

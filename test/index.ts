@@ -1,7 +1,7 @@
 /*
  * @Author: zhicheng ran
  * @Date: 2023-02-22 16:15:56
- * @LastEditTime: 2023-02-22 17:22:56
+ * @LastEditTime: 2023-02-23 10:17:45
  * @FilePath: \pic-processing\test\index.ts
  * @Description:
  */
@@ -15,7 +15,7 @@ file.addEventListener('change', async (e: any) => {
   const pic = new PicProcessor({
     content: file,
   })
-  data = await pic.render()
+  data = (await pic.render()).base64
   console.log(pic, data)
 })
 const btn = document.getElementById(

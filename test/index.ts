@@ -1,29 +1,39 @@
 /*
  * @Author: zhicheng ran
  * @Date: 2023-02-22 16:15:56
- * @LastEditTime: 2023-02-23 10:17:45
+ * @LastEditTime: 2023-02-24 17:18:17
  * @FilePath: \pic-processing\test\index.ts
  * @Description:
  */
 import { PicProcessor, OpenCV } from '../src'
-let data: string
-const file = document.getElementById(
-  'file'
-) as HTMLInputElement
-file.addEventListener('change', async (e: any) => {
-  const file = e.target!.files[0]
-  const pic = new PicProcessor({
-    content: file,
-  })
-  data = (await pic.render()).base64
-  console.log(pic, data)
+
+const vue = new (window as any).Vue({
+  el: '#app',
+  data: {
+    config: {
+      content: undefined,
+      rotate: 0,
+      scale: 1,
+    },
+    pic: '',
+    processor: new PicProcessor(),
+  },
+  methods: {
+    async handleFileChange(e: any) {
+      const file = e.target!.files[0]
+      ;(this as any).config.content = file
+    },
+  },
+  watch: {
+    config: {
+      async handler() {
+        const { config, processor } = this as any
+        ;(this as any).pic = (
+          await (processor as PicProcessor).render(config)
+        ).base64
+      },
+      deep: true,
+    },
+  },
 })
-const btn = document.getElementById(
-  'btn'
-) as HTMLButtonElement
-const output = document.getElementById(
-  'output'
-) as HTMLImageElement
-btn.addEventListener('click', async () => {
-  output.src = data
-})
+console.log(vue)

@@ -28,4 +28,16 @@ export class Utils {
   static fileToBlob(file: File) {
     return new Blob([file], { type: 'image/jpeg' })
   }
+  static canvasToBlob(canvas: HTMLCanvasElement) {
+    return new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        blob => {
+          resolve(blob!)
+        },
+        // only support png because of canvas not support gif
+        'image/png',
+        1
+      )
+    })
+  }
 }

@@ -1,7 +1,7 @@
 <!--
  * @Author: zhicheng ran
  * @Date: 2023-02-22 15:01:28
- * @LastEditTime: 2023-02-22 17:22:38
+ * @LastEditTime: 2023-02-24 17:12:59
  * @FilePath: \pic-processing\index.html
  * @Description: 
 -->
@@ -14,14 +14,27 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
+    <style>
+      body {
+        background: yellow;
+      }
+    </style>
     <title>Document</title>
   </head>
   <body>
-    input
-    <input accept="image/*" type="file" name="" id="file" />
-    output
-    <img src="" id="output" alt="" />
-    <button id="btn">render</button>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <div id="app">
+      input
+      <input
+        accept="image/*"
+        type="file"
+        name=""
+        id="file"
+        @change="handleFileChange"
+      />
+      output
+      <img :src="pic" id="output" alt="" />
+    </div>
     <script type="module" src="/test/index.ts"></script>
   </body>
 </html>

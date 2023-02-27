@@ -34,15 +34,22 @@ export class PicProcessor {
     )
     // canvas.width = Math.max(this.#width, this.#height)
     // scale the canvas
-    this.#scaleCanvas(canvas)
     // rotate the canvas
+    this.#scaleCanvas(canvas)
     this.#rotateCanvas(canvas)
 
     ctx.drawImage(bitmap, 0, 0)
-    const base64 = canvas.toDataURL()
+
+    return this.#generateFn(canvas)
+  }
+  #generateFn(canvas: HTMLCanvasElement) {
     return {
-      base64,
-      // blob: await this.#canvasToBlob(canvas),
+      toBlob() {
+        return Utils.canvasToBlob(canvas)
+      },
+      async toBase64() {
+        return canvas.toDataURL()
+      },
     }
   }
   /**
@@ -53,6 +60,7 @@ export class PicProcessor {
     const { scale } = this.#config!
     canvas.width = this.#width * scale.X
     canvas.height = this.#height * scale.Y
+    // maybe change the center
     ctx.scale(scale.X, scale.Y)
   }
   /**
@@ -61,15 +69,27 @@ export class PicProcessor {
   #rotateCanvas(canvas: HTMLCanvasElement) {
     const { rotate } = this.#config!
     const ctx = canvas.getContext('2d')!
+    // move the canvas to the center
+    console.log(
+      Date.now(),
+      canvas.width,
+      canvas.height,
+      rotate
+    )
     ctx.translate(canvas.width / 2, canvas.height / 2)
+    // rotate the canvas
     ctx.rotate((rotate * Math.PI) / 180)
+    // move the canvas back
     ctx.translate(-canvas.width / 2, -canvas.height / 2)
+
+    // 并未在中心?
+    // 最长边画圆形
     // swap
-    if (rotate !== 0) {
-      const width = canvas.width
-      canvas.width = canvas.height
-      canvas.height = width
-    }
+    // if (rotate !== 0) {
+    //   const width = canvas.width
+    //   canvas.width = canvas.height
+    //   canvas.height = width
+    // }
   }
 
   /**

@@ -34,8 +34,8 @@ export class PicProcessor {
     )
     // canvas.width = Math.max(this.#width, this.#height)
     // scale the canvas
-    // rotate the canvas
     this.#scaleCanvas(canvas)
+    // rotate the canvas
     this.#rotateCanvas(canvas)
 
     ctx.drawImage(bitmap, 0, 0)
@@ -70,17 +70,15 @@ export class PicProcessor {
     const { rotate } = this.#config!
     const ctx = canvas.getContext('2d')!
     // move the canvas to the center
-    console.log(
-      Date.now(),
-      canvas.width,
-      canvas.height,
-      rotate
-    )
-    ctx.translate(canvas.width / 2, canvas.height / 2)
+    const center = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+    }
+    ctx.translate(center.x, center.y)
     // rotate the canvas
     ctx.rotate((rotate * Math.PI) / 180)
     // move the canvas back
-    ctx.translate(-canvas.width / 2, -canvas.height / 2)
+    ctx.translate(-center.x, -center.y)
 
     // 并未在中心?
     // 最长边画圆形

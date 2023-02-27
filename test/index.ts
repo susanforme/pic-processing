@@ -1,45 +1,51 @@
 /*
  * @Author: zhicheng ran
  * @Date: 2023-02-22 16:15:56
- * @LastEditTime: 2023-02-24 17:28:30
- * @FilePath: \pic-processing\test\index.ts
+ * @LastEditTime: 2023-02-24 21:24:13
+ * @FilePath: \pic-processor\test\index.ts
  * @Description:
  */
 import { PicProcessor, OpenCV } from '../src'
-import Vue from 'vue'
+import Vue from 'vue/types/umd'
+import { debounce } from 'lodash'
 const vue = new (
   window as {
     Vue: typeof Vue
   }
 ).Vue({
   el: '#app',
-  data: {
-    config: {
-      content: '',
-      rotate: 0,
-      scale: 1,
-    },
-    pic: '',
-    processor: new PicProcessor(),
-  },
-  methods: {
-    async handleFileChange(e: any) {
-      const file = e.target!.files[0]
-      this.config.content = file
-    },
-  },
-  watch: {
-    config: {
-      async handler() {
-        if (this.config.content) {
-          const { config, processor } = this
-          this.pic = (
-            await (processor as PicProcessor).render(config)
-          ).base64
-        }
+  setup(props, ctx) {
+    const state = (window.Vue as any).reactive({
+      config: {
+        content: '',
+        rotate: 0,
+        scale: 1,
       },
+      pic: '',
+      processor: new PicProcessor(),
+      loading: false,
+    })
+    const fn = debounce(async () => {
+      if (state.config.content) {
+        state.loading = true
+        const { config, processor } = state
+        const util = await processor.render(config)
+        const blob = await util.toBlob()
+        state.pic = URL.createObjectURL(blob)
+        state.loading = false
+      }
+    }, 500)
+    ;(window.Vue as any).watch(state.config, () => fn(), {
       deep: true,
-    },
+    })
+    async function handleFileChange(e: any) {
+      const file = e.target!.files[0]
+      state.config.content = file
+    }
+    return {
+      state,
+      handleFileChange,
+    }
   },
 })
 console.log(vue)

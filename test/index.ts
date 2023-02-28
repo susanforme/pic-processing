@@ -1,8 +1,8 @@
 /*
  * @Author: zhicheng ran
  * @Date: 2023-02-22 16:15:56
- * @LastEditTime: 2023-02-24 21:24:13
- * @FilePath: \pic-processor\test\index.ts
+ * @LastEditTime: 2023-02-28 16:55:37
+ * @FilePath: \pic-processing\test\index.ts
  * @Description:
  */
 import { PicProcessor, OpenCV } from '../src'
@@ -20,6 +20,8 @@ const vue = new (
         content: '',
         rotate: 0,
         scale: 1,
+        horizontalMirror: false,
+        verticalMirror: false,
       },
       pic: '',
       processor: new PicProcessor(),

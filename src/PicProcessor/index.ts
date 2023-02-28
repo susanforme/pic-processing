@@ -38,6 +38,8 @@ export class PicProcessor {
     // rotate the canvas
     this.#rotateCanvas(canvas)
 
+    this.#mirrorCanvas(canvas)
+
     ctx.drawImage(bitmap, 0, 0)
 
     return this.#generateFn(canvas)
@@ -96,6 +98,26 @@ export class PicProcessor {
     //   canvas.width = canvas.height
     //   canvas.height = width
     // }
+  }
+
+  /**
+   * @description mirror the canvas
+   */
+  #mirrorCanvas(canvas: HTMLCanvasElement) {
+    const { horizontalMirror, verticalMirror } =
+      this.#config!
+    const ctx = canvas.getContext('2d')!
+    // mirror the canvas
+    if (horizontalMirror) {
+      ctx.translate(canvas.width, 0)
+      ctx.scale(-1, 1)
+    } else if (verticalMirror) {
+      ctx.translate(0, canvas.height)
+      ctx.scale(1, -1)
+    } else if (horizontalMirror && verticalMirror) {
+      ctx.translate(canvas.width, canvas.height)
+      ctx.scale(-1, -1)
+    }
   }
 
   /**
@@ -190,6 +212,8 @@ export class PicProcessor {
     return {
       isTransparency: true,
       rotate: 0,
+      horizontalMirror: false,
+      verticalMirror: false,
       ...config,
       scale,
     }
@@ -218,6 +242,16 @@ export type PicProcessorConfig = {
    * @default 0
    */
   rotate?: number
+  /**
+   * @description Whether to flip the image horizontally
+   * @default false
+   */
+  horizontalMirror?: boolean
+  /**
+   * @description Whether to flip the image vertically
+   * @default false
+   */
+  verticalMirror?: boolean
 }
 
 /**

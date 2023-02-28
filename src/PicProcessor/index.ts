@@ -38,7 +38,7 @@ export class PicProcessor {
     // rotate the canvas
     this.#rotateCanvas(canvas)
 
-    this.#mirrorCanvas(canvas)
+    // this.#mirrorCanvas(canvas)
 
     ctx.drawImage(bitmap, 0, 0)
 
@@ -59,11 +59,13 @@ export class PicProcessor {
    */
   #scaleCanvas(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d')!
+    ctx.save()
     const { scale } = this.#config!
     canvas.width = this.#width * scale.X
     canvas.height = this.#height * scale.Y
     // maybe change the center
     ctx.scale(scale.X, scale.Y)
+    ctx.restore()
   }
   /**
    * @description rotate the canvas
@@ -103,22 +105,23 @@ export class PicProcessor {
   /**
    * @description mirror the canvas
    */
-  #mirrorCanvas(canvas: HTMLCanvasElement) {
-    const { horizontalMirror, verticalMirror } =
-      this.#config!
-    const ctx = canvas.getContext('2d')!
-    // mirror the canvas
-    if (horizontalMirror) {
-      ctx.translate(canvas.width, 0)
-      ctx.scale(-1, 1)
-    } else if (verticalMirror) {
-      ctx.translate(0, canvas.height)
-      ctx.scale(1, -1)
-    } else if (horizontalMirror && verticalMirror) {
-      ctx.translate(canvas.width, canvas.height)
-      ctx.scale(-1, -1)
-    }
-  }
+  // https://www.zhangxinxu.com/wordpress/2018/03/canvas-image-element-mirror-animation/
+  // #mirrorCanvas(canvas: HTMLCanvasElement) {
+  //   const { horizontalMirror, verticalMirror } =
+  //     this.#config!
+  //   const ctx = canvas.getContext('2d')!
+  //   // mirror the canvas
+  //   if (horizontalMirror) {
+  //     ctx.translate(canvas.width, 0)
+  //     ctx.scale(-1, 1)
+  //   } else if (verticalMirror) {
+  //     ctx.translate(0, canvas.height)
+  //     ctx.scale(1, -1)
+  //   } else if (horizontalMirror && verticalMirror) {
+  //     ctx.translate(canvas.width, canvas.height)
+  //     ctx.scale(-1, -1)
+  //   }
+  // }
 
   /**
    * @description Returns the loaded image

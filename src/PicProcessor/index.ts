@@ -67,18 +67,26 @@ export class PicProcessor {
    * @description rotate the canvas
    */
   #rotateCanvas(canvas: HTMLCanvasElement) {
-    const { rotate } = this.#config!
+    const { rotate, scale } = this.#config!
     const ctx = canvas.getContext('2d')!
     // move the canvas to the center
     const center = {
       x: canvas.width / 2,
       y: canvas.height / 2,
     }
-    ctx.translate(center.x, center.y)
+    // The offset after scaling
+    const offset = {
+      x: (this.#width * (scale.X - 1)) / 2,
+      y: (this.#height * (scale.Y - 1)) / 2,
+    }
+    ctx.translate(center.x - offset.x, center.y - offset.y)
     // rotate the canvas
     ctx.rotate((rotate * Math.PI) / 180)
     // move the canvas back
-    ctx.translate(-center.x, -center.y)
+    ctx.translate(
+      -center.x + offset.x,
+      -center.y + offset.y
+    )
 
     // 并未在中心?
     // 最长边画圆形
